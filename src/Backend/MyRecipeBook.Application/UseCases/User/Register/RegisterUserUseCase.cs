@@ -23,6 +23,8 @@ namespace MyRecipeBook.Application.UseCases.User.Register
 
             if (result.IsValid == false)
             {
+                var errorMessages = result.Errors.Select(e => e.ErrorMessage);
+
                 throw new Exception();
             }
         }
