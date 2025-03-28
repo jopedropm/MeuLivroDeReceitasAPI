@@ -10,8 +10,8 @@ namespace MyRecipeBook.Application.UseCases.User.Register
         {
             RuleFor(user => user.Name).NotEmpty().WithMessage(ResourceMessagesExceptions.NAME_EMPTY);
             RuleFor(user => user.Email).NotEmpty().WithMessage(ResourceMessagesExceptions.NAME_EMPTY);
-            RuleFor(user => user.Email).EmailAddress();
-            RuleFor(user => user.Password.Length).GreaterThanOrEqualTo(6).WithMessage("A senha deve ter 6 ou mais caracteres");
+            RuleFor(user => user.Email).EmailAddress().WithMessage(ResourceMessagesExceptions.EMAIL_INVALID);
+            RuleFor(user => user.Password.Length).GreaterThanOrEqualTo(6).WithMessage(ResourceMessagesExceptions.PASSWORD_EMPTY);
         }
     }
 }
