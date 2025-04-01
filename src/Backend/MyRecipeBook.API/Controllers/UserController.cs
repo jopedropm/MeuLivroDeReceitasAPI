@@ -28,4 +28,3 @@ namespace MyRecipeBook.API.Controllers
         }
     }
 }
-;

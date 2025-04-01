@@ -8,6 +8,7 @@ using System.Net;
 
 namespace MyRecipeBook.API.Filters;
 
+//As exceptions caem aqui para serem tratada
 public class ExceptionFilter : IExceptionFilter
 {
     public void OnException(ExceptionContext context)
@@ -22,10 +23,12 @@ public class ExceptionFilter : IExceptionFilter
         }
     }
 
+    //Erro conhecido
     private void HandleProjectException(ExceptionContext context)
     {
         if (context.Exception is ErrorOnValidationException)
         {
+            //Convertendo Exception em ErrorOnValidation...
             var exception = context.Exception as ErrorOnValidationException;
 
             //Numero do erro "StatusCode" 
@@ -35,6 +38,7 @@ public class ExceptionFilter : IExceptionFilter
         }
     }
 
+    //Erro desconhecido
     private void ThrowUnknownException(ExceptionContext context)
     {
         //Numero do erro "StatusCode"

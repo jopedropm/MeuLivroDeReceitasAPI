@@ -10,6 +10,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//As exceptions vão ser inteceptadas e tratadas pelo filtro criado
 builder.Services.AddMvc(o => o.Filters.Add(typeof(ExceptionFilter)));
 
 var app = builder.Build();
