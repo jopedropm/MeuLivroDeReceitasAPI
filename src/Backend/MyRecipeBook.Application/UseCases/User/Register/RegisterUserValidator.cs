@@ -4,6 +4,7 @@ using MyRecipeBook.Exceptions;
 
 namespace MyRecipeBook.Application.UseCases.User.Register
 {
+    //Pacote Fluent Validation do nuGet
     public class RegisterUserValidator : AbstractValidator<RequestRegisterUserJson>
     {
         public RegisterUserValidator()

@@ -28,7 +28,7 @@ public class ExceptionFilter : IExceptionFilter
         {
             var exception = context.Exception as ErrorOnValidationException;
 
-            //Numero do erro "StatusCode"
+            //Numero do erro "StatusCode" 
             context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
             //Mensagem do erro "Result"
             context.Result = new BadRequestObjectResult(new ResponseErrorJson(exception.ErrorsMessages));
