@@ -1,4 +1,6 @@
 ﻿namespace MyRecipeBook.Communication.Responses;
+
+//É daqui que sai as mensagens de erros que estão em ResourceMessagesException
 public class ResponseErrorJson
 {
     public IList<string> Errors { get; set; }

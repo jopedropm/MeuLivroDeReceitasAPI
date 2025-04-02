@@ -1,5 +1,7 @@
-﻿using MyRecipeBook.Communication.Requests;
+﻿using MyRecipeBook.Application.Services.Automapper;
+using MyRecipeBook.Communication.Requests;
 using MyRecipeBook.Communication.Responses;
+using MyRecipeBook.Domain.Entities;
 using MyRecipeBook.Exceptions.ExceptionsBase;
 
 namespace MyRecipeBook.Application.UseCases.User.Register
@@ -9,7 +11,19 @@ namespace MyRecipeBook.Application.UseCases.User.Register
         //Recebe a requisição e envia a resposta sobre a regra de negócio
         public ResponseRegisterUserJson Execute(RequestRegisterUserJson request)
         {
+            //Chama a funçao para validar as UseCases
             ValidateUser(request);
+
+            //Criando o usuário com AutoMapper de forma manual, mas depois será feito por injeção de dependência
+            var autoMapper = new AutoMapper.MapperConfiguration(options =>
+            {
+                options.AddProfile(new AutoMapping());
+            }).CreateMapper();
+
+            var user = autoMapper.Map<Domain.Entities.User>(request);
+
+            //Critografia da senha
+            //Salvar no banco de dados
 
             return new ResponseRegisterUserJson
             {
