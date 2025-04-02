@@ -1,4 +1,5 @@
 ﻿using MyRecipeBook.Application.Services.Automapper;
+using MyRecipeBook.Application.Services.Cryptography;
 using MyRecipeBook.Communication.Requests;
 using MyRecipeBook.Communication.Responses;
 using MyRecipeBook.Domain.Entities;
@@ -23,6 +24,10 @@ namespace MyRecipeBook.Application.UseCases.User.Register
             var user = autoMapper.Map<Domain.Entities.User>(request);
 
             //Critografia da senha
+            var passwordCryptography = new PasswordEncripter();
+
+            user.Password = passwordCryptography.Encrypt(request.Password);
+
             //Salvar no banco de dados
 
             return new ResponseRegisterUserJson
