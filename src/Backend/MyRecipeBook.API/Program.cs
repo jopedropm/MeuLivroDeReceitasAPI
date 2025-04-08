@@ -1,5 +1,7 @@
 using MyRecipeBook.API.Filters;
 using MyRecipeBook.API.Middleware;
+using MyRecipeBook.Application;
+using MyRecipeBook.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +14,9 @@ builder.Services.AddSwaggerGen();
 
 //As exceptions vão ser inteceptadas e tratadas pelo filtro criado
 builder.Services.AddMvc(o => o.Filters.Add(typeof(ExceptionFilter)));
+
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure();
 
 var app = builder.Build();
 

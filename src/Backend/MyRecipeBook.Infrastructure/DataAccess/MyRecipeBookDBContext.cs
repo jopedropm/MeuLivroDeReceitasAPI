@@ -12,6 +12,7 @@ public class MyRecipeBookDBContext : DbContext
     //Variavel de usuarios
     public DbSet<User> Users { get; set; }
 
+    //Aplica automaticamente todas as configurações das entidades ao sistema
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(MyRecipeBookDBContext).Assembly);
