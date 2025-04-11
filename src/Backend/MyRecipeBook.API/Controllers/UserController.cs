@@ -16,10 +16,10 @@ namespace MyRecipeBook.API.Controllers
         [ProducesResponseType(typeof(ResponseRegisterUserJson), StatusCodes.Status201Created)]
 
         //Funçao de EndPoint
-        public IActionResult Register(RequestRegisterUserJson request)
+        public IActionResult Register(
+            RequestRegisterUserJson request,
+            IRegisterUserUseCase useCase)
         {
-            var useCase = new RegisterUserUseCase();
-
             //Executa a regra de negócio com a função execute do RegisterUserUseCase
             var result = useCase.Execute(request);
 

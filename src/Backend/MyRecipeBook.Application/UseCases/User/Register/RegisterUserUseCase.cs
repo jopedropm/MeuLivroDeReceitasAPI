@@ -1,4 +1,5 @@
-﻿using MyRecipeBook.Application.Services.Automapper;
+﻿using AutoMapper;
+using MyRecipeBook.Application.Services.Automapper;
 using MyRecipeBook.Application.Services.Cryptography;
 using MyRecipeBook.Communication.Requests;
 using MyRecipeBook.Communication.Responses;
@@ -6,31 +7,38 @@ using MyRecipeBook.Domain.Entities;
 using MyRecipeBook.Domain.Repositories.User;
 using MyRecipeBook.Exceptions.ExceptionsBase;
 
-namespace MyRecipeBook.Application.UseCases.User.Register
+namespace MyRecipeBook.Application.UseCases.User.Register 
 {
-    public class RegisterUserUseCase
+    public class RegisterUserUseCase : IRegisterUserUseCase
     {
         private readonly IUserWriteOnlyRepository _writeOnlyRepository;
         private readonly IUserReadOnlyRepository _readOnlyRepository;
+        private readonly IMapper _mapper;
+        private readonly PasswordEncripter _passwordEncripter;
+
+        //Contrutor
+        public RegisterUserUseCase(
+            IUserWriteOnlyRepository writeOnlyRepository,
+            IUserReadOnlyRepository readOnlyRepository,
+            IMapper mapper,
+            PasswordEncripter passwordEncripter)
+        {
+            _writeOnlyRepository = writeOnlyRepository;
+            _readOnlyRepository = readOnlyRepository;
+            _mapper = mapper;
+            _passwordEncripter = passwordEncripter;
+        }
 
         //Recebe a requisição e envia a resposta sobre a regra de negócio
         public async Task<ResponseRegisterUserJson> Execute(RequestRegisterUserJson request)
         {
             //Chama a funçao para validar as UseCases
             ValidateUser(request);
-
-            //Criando o usuário com AutoMapper de forma manual, mas depois será feito por injeção de dependência
-            var autoMapper = new AutoMapper.MapperConfiguration(options =>
-            {
-                options.AddProfile(new AutoMapping());
-            }).CreateMapper();
-
-            var user = autoMapper.Map<Domain.Entities.User>(request);
+               
+            var user = _mapper.Map<Domain.Entities.User>(request);
 
             //Critografia da senha
-            var passwordCryptography = new PasswordEncripter();
-
-            user.Password = passwordCryptography.Encrypt(request.Password);
+            user.Password = _passwordEncripter.Encrypt(request.Password);
 
             //Adcionar no banco de dados
             await _writeOnlyRepository.Add(user);
@@ -42,6 +50,7 @@ namespace MyRecipeBook.Application.UseCases.User.Register
             };
         }
 
+        //Essa funçao é privada portanto não entra na Interface, é somente utilizada na funçao acima
         private void ValidateUser(RequestRegisterUserJson request)
         {
             //Recebe as validações
