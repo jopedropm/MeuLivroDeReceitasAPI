@@ -6,10 +6,12 @@ using MyRecipeBook.Application.UseCases.User.Register;
 namespace MyRecipeBook.Application;
 public static class DependencyInjectionExtension
 {
+    //É a função que vai ser chamada no program.cs builder.Services.AddApplication
     public static void AddApplication(this IServiceCollection services)
     {
         AddAutoMapper(services);
         AddUseCases(services);
+        AddPasswordEncripter(services);
     }
 
     private static void AddAutoMapper(IServiceCollection services)

@@ -4,6 +4,7 @@ using MyRecipeBook.Application.Services.Cryptography;
 using MyRecipeBook.Communication.Requests;
 using MyRecipeBook.Communication.Responses;
 using MyRecipeBook.Domain.Entities;
+using MyRecipeBook.Domain.Repositories;
 using MyRecipeBook.Domain.Repositories.User;
 using MyRecipeBook.Exceptions.ExceptionsBase;
 
@@ -13,6 +14,7 @@ namespace MyRecipeBook.Application.UseCases.User.Register
     {
         private readonly IUserWriteOnlyRepository _writeOnlyRepository;
         private readonly IUserReadOnlyRepository _readOnlyRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly PasswordEncripter _passwordEncripter;
 
@@ -20,11 +22,13 @@ namespace MyRecipeBook.Application.UseCases.User.Register
         public RegisterUserUseCase(
             IUserWriteOnlyRepository writeOnlyRepository,
             IUserReadOnlyRepository readOnlyRepository,
+            IUnitOfWork unitOfWork,
             IMapper mapper,
             PasswordEncripter passwordEncripter)
         {
             _writeOnlyRepository = writeOnlyRepository;
             _readOnlyRepository = readOnlyRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
             _passwordEncripter = passwordEncripter;
         }
@@ -42,6 +46,7 @@ namespace MyRecipeBook.Application.UseCases.User.Register
 
             //Adcionar no banco de dados
             await _writeOnlyRepository.Add(user);
+            await _unitOfWork.Commit();
 
             //Retorna uma resposta do servidor
             return new ResponseRegisterUserJson
