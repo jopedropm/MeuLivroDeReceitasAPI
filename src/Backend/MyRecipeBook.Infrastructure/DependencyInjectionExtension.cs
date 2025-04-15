@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MyRecipeBook.Domain.Repositories;
 using MyRecipeBook.Domain.Repositories.User;
@@ -12,15 +13,17 @@ public static class DependencyInjectionExtension
 {
 
     //É a funçao que vai ser chamada no program.cs builder.Services.AddInfrastructure
-    public static void AddInfrastructure(this IServiceCollection services)
+    public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        AddDbContext_SqlServer(services);
+
+        AddDbContext_SqlServer(services, configuration);
         AddRepositories(services);
     }
 
-    private static void AddDbContext_SqlServer(IServiceCollection services)
+    //Faz a conexão com o banco de dados especificado no appsettings.json
+    private static void AddDbContext_SqlServer(IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = "Server=NSVT-ALN13\\SQLEXPRESS;Database=DB_MeuLivroDeReceitas;User Id=sa;Password=123456;Trusted_Connection=true;Encrypt=True;TrustServerCertificate=true";
+        var connectionString = configuration.GetConnectionString("Connection");
 
         services.AddDbContext<MyRecipeBookDBContext>(dbContextOptions =>
         {
@@ -30,9 +33,12 @@ public static class DependencyInjectionExtension
 
     private static void AddRepositories(IServiceCollection services)
     {
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
-
+        //Adiciona ao DB
         services.AddScoped<IUserWriteOnlyRepository, UserRepository>();
+        //Verifica se o email a ser registrado ja esta no DB
         services.AddScoped<IUserReadOnlyRepository, UserRepository>();
+
+        //Salvar no DB
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
     }
 }

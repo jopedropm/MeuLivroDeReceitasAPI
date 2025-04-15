@@ -8,5 +8,6 @@ public class UnitOfWork : IUnitOfWork
     //Construtor
     public UnitOfWork(MyRecipeBookDBContext dbContext) => _dbContext = dbContext;
 
+    //Salvar no DB
     public async Task Commit() => await _dbContext.SaveChangesAsync();
 }

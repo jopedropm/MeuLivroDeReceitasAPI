@@ -15,8 +15,11 @@ builder.Services.AddSwaggerGen();
 //As exceptions vão ser inteceptadas e tratadas pelo filtro criado
 builder.Services.AddMvc(o => o.Filters.Add(typeof(ExceptionFilter)));
 
+//Configuration conecta ao appsettings
+builder.Configuration.GetConnectionString("Connection");
+
 builder.Services.AddApplication();
-builder.Services.AddInfrastructure();
+builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
