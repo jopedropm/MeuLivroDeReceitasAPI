@@ -6,7 +6,10 @@ using MyRecipeBook.Communication.Responses;
 using MyRecipeBook.Domain.Entities;
 using MyRecipeBook.Domain.Repositories;
 using MyRecipeBook.Domain.Repositories.User;
+using MyRecipeBook.Exceptions;
 using MyRecipeBook.Exceptions.ExceptionsBase;
+using System.ComponentModel;
+using System.Threading.Tasks;
 
 namespace MyRecipeBook.Application.UseCases.User.Register 
 {
@@ -37,7 +40,7 @@ namespace MyRecipeBook.Application.UseCases.User.Register
         public async Task<ResponseRegisterUserJson> Execute(RequestRegisterUserJson request)
         {
             //Chama a funçao para validar as UseCases
-            ValidateUser(request);
+            await ValidateUser(request);
                
             var user = _mapper.Map<Domain.Entities.User>(request);
 
@@ -56,13 +59,20 @@ namespace MyRecipeBook.Application.UseCases.User.Register
         }
 
         //Essa funçao é privada portanto não entra na Interface, é somente utilizada na funçao acima
-        private void ValidateUser(RequestRegisterUserJson request)
+        private async Task ValidateUser(RequestRegisterUserJson request)
         {
             //Recebe as validações
             var validator = new RegisterUserValidator();
 
             //Passa o Validate(funçao do FluentValidator)
             var result = validator.Validate(request);
+
+            var emailExist = await _readOnlyRepository.ExistActiveUserWithEmail(request.Email);
+
+            if (emailExist)
+            {
+                result.Errors.Add(new FluentValidation.Results.ValidationFailure(string.Empty, ResourceMessagesExceptions.EMAIL_ALREADY_REGISTERED));
+            }
 
             //Se a validação nao for valida
             if (result.IsValid == false)
