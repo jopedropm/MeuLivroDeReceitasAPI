@@ -39,3 +39,9 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+//Classe Program.cs é o ponto de entrada do aplicativo
+public partial class Program
+{
+
+}

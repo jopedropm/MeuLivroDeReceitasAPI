@@ -18,7 +18,11 @@ public class CultureMiddleware
         var supportedLanguages = CultureInfo.GetCultures(CultureTypes.AllCultures);
 
         //Busca qual o idioma que o http esta usando
-        var requestedCulture = context.Request.Headers.AcceptLanguage.FirstOrDefault().Split(',')[0];
+        var acceptLanguageHeader = context.Request.Headers.AcceptLanguage.FirstOrDefault();
+        var requestedCulture = !string.IsNullOrWhiteSpace(acceptLanguageHeader)
+            ? acceptLanguageHeader.Split(',')[0]
+            : null;
+
 
         //Passamos com idioma padrão o inglês
         var cultureInfo = new CultureInfo("en");
